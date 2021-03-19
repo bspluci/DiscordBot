@@ -128,8 +128,10 @@ module.exports = {
 
          const eventMembers = channelMembers.sort(() => Math.random() - 0.5);
 
-         division = (n) => {
-            const arr = eventMembers.clone();
+         Array.prototype.division = (n) => {
+            const arr = eventMembers.map((user) => {
+               return user;
+            });
             const len = arr.length;
             const cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
             let temp = [];
@@ -151,7 +153,7 @@ module.exports = {
             return temp;
          };
 
-         const divisionTeams = division(args[1]);
+         const divisionTeams = eventMembers.division(args[1]);
          this.team = divisionTeams;
          let num = 0;
 
