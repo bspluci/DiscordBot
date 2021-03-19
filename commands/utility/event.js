@@ -25,7 +25,7 @@ module.exports = {
 
       if (cmd === "showchannels" || cmd === "채널목록" || cmd === "채널보기") {
          this.embed = !this.embed;
-         MCH.send(`baseChannel: ${thisBC} \nchildChannel: ${thisCC}aa`);
+         MCH.send(`baseChannel: ${thisBC} \nchildChannel: ${thisCC}`);
          return;
       }
 
