@@ -1,6 +1,7 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+const { prefix } = require("./config.json");
+// const { prefix, token } = require("./config.json");
 const exampleEmbed = new Discord.MessageEmbed()
    .setColor("#0099ff")
    .setTitle("Some title")
@@ -119,4 +120,4 @@ client.on("message", (message) => {
    }
 });
 
-client.login(token);
+client.login(process.env.TOKEN);
