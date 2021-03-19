@@ -71,13 +71,13 @@ module.exports = {
          }
       }
 
-      const baseCh = MGCC.map((channel) => {
+      const matchBaseChannel = MGCC.map((channel) => {
          if (channel.name.replace(/(\s*)/g, "") === thisBC.replace(/(\s*)/g, "")) {
             baseChannel = channel.id;
          }
       });
 
-      const childCh = MGCC.filter((channel) => {
+      const matchChildChannel = MGCC.filter((channel) => {
          for (let i = 0; i < thisCC.length; i++) {
             if (channel.name.replace(/(\s*)/g, "") === thisCC[i].replace(/(\s*)/g, "")) {
                childChannel.push(channel.id);
@@ -128,10 +128,8 @@ module.exports = {
 
          const eventMembers = channelMembers.sort(() => Math.random() - 0.5);
 
-         Array.prototype.division = (n) => {
-            const arr = eventMembers.map((user) => {
-               return user;
-            });
+         division = (n) => {
+            const arr = eventMembers.clone();
             const len = arr.length;
             const cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
             let temp = [];
@@ -153,7 +151,7 @@ module.exports = {
             return temp;
          };
 
-         const divisionTeams = eventMembers.division(args[1]);
+         const divisionTeams = division(args[1]);
          this.team = divisionTeams;
          let num = 0;
 

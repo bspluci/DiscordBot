@@ -64,9 +64,9 @@ client.on("message", (message) => {
       }
    }
 
-   if (command.name === "event" && args[0] === "showchannels") {
-      message.channel.send(exampleEmbed);
-   }
+   // if (command.name === "event" && args[0] === "showchannels") {
+   //    message.channel.send(exampleEmbed);
+   // }
 
    // 명령 사용법 체크
    if (command.args && !args.length) {
