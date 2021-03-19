@@ -9,7 +9,7 @@ module.exports = {
    cooldown: 1,
    num: undefined,
    team: undefined,
-   embed: undefined,
+   embed: false,
    diviTeam: [],
    baseChannel: "이벤트대기방",
    childChannel: ["custom1", "custom2", "custom3"],
@@ -164,26 +164,6 @@ module.exports = {
                return `${num}팀 : ${name}`;
             })
          );
-
-         const divisionTeamEmbed = new Discord.MessageEmbed()
-            .setColor("#0099ff")
-            .setTitle("Some title")
-            // .setURL("https://discord.js.org/")
-            // .setAuthor("Some name", "https://i.imgur.com/wSTFkRM.png", "https://discord.js.org")
-            // .setDescription("Some description here")
-            .setThumbnail("https://i.imgur.com/wSTFkRM.png")
-            .addFields(
-               { name: "Regular field title", value: "Some value here" },
-               { name: "\u200B", value: "\u200B" },
-               { name: "Inline field title", value: "Some value here", inline: true },
-               { name: "Inline field title", value: "Some value here", inline: true }
-            )
-            .addField("Inline field title", "Some value here", true)
-            .setImage("https://i.imgur.com/wSTFkRM.png")
-            .setTimestamp()
-            .setFooter("Some footer text here", "https://i.imgur.com/wSTFkRM.png");
-
-         this.embed = divisionTeamEmbed;
       }
 
       if (cmd === "이동" || cmd === "move") {

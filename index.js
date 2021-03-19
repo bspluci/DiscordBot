@@ -1,6 +1,23 @@
 const fs = require("fs");
 const Discord = require("discord.js");
 const { prefix } = require("./config.json");
+const exampleEmbed = new Discord.MessageEmbed()
+   .setColor("#0099ff")
+   .setTitle("Some title")
+   // .setURL("https://discord.js.org/")
+   // .setAuthor("Some name", "https://i.imgur.com/wSTFkRM.png", "https://discord.js.org")
+   // .setDescription("Some description here")
+   .setThumbnail("https://i.imgur.com/wSTFkRM.png")
+   .addFields(
+      { name: "Regular field title", value: "Some value here" },
+      { name: "\u200B", value: "\u200B" },
+      { name: "Inline field title", value: "Some value here", inline: true },
+      { name: "Inline field title", value: "Some value here", inline: true }
+   )
+   .addField("Inline field title", "Some value here", true)
+   .setImage("https://i.imgur.com/wSTFkRM.png")
+   .setTimestamp()
+   .setFooter("Some footer text here", "https://i.imgur.com/wSTFkRM.png");
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -47,8 +64,8 @@ client.on("message", (message) => {
       }
    }
 
-   if (command.name === "event" && args[0] === "team") {
-      message.channel.send(command.embed);
+   if (command.name === "event" && args[0] === "showchannels") {
+      message.channel.send(exampleEmbed);
    }
 
    // 명령 사용법 체크
