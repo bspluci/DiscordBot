@@ -140,7 +140,7 @@ module.exports = {
             for (let i = 0; i < cnt; i++) {
                temp.push(arr.splice(0, n));
 
-               if (i + 2 === cnt) {
+               if (i + 1 === cnt) {
                   if (arr.length > 0 && arr.length < n) {
                      const num = arr.length;
 
@@ -150,6 +150,7 @@ module.exports = {
                   }
                }
             }
+
             return temp;
          };
 
