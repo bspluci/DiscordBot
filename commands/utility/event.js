@@ -11,8 +11,8 @@ module.exports = {
    team: undefined,
    embed: false,
    diviTeam: [],
-   baseChannel: "이벤트대기방",
-   childChannel: ["custom1", "custom2", "custom3"],
+   baseChannel: "마을회관(진실의방)",
+   childChannel: ["[1]SQUAD", "[2]SQUAD", "[3]SQUAD"],
    execute(message, args) {
       const cmd = args[0].toLowerCase(); // 내부명령어
       const MGCC = message.guild.channels.cache;
