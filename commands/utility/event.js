@@ -178,7 +178,7 @@ module.exports = {
             divisionTeams.map((name) => {
                num++;
                this.diviTeam.push(`${num}팀: ${name}`);
-               return `${num}팀 : ${name}n/`;
+               return `${num}팀 : ${name} \n`;
             })
          );
       }
