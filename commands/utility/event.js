@@ -9,8 +9,7 @@ module.exports = {
    cooldown: 1,
    num: undefined,
    team: undefined,
-   embed: false,
-   diviTeam: [],
+   maxMember: 4,
    baseChannel: "참가자대기실",
    childChannel: [
       "[1]커스텀",
@@ -40,7 +39,6 @@ module.exports = {
       let childChannel = []; // 채널명을 채널id값으로 바꿈
 
       if (cmd === "showchannels" || cmd === "채널목록" || cmd === "채널보기") {
-         this.embed = !this.embed;
          MCH.send(`baseChannel: ${thisBC} \nchildChannel: ${thisCC}`);
          return;
       }
@@ -75,6 +73,7 @@ module.exports = {
          MCH.send(
             `${message.author} 이벤트 채널 설정이 필요합니다. \n${prefix}${this.name} showchannels 명령으로 채널 목록을 확인해주세요.`
          );
+
          return;
       } else {
          for (let i = 0; i < thisCC.length; i++) {
@@ -87,13 +86,13 @@ module.exports = {
          }
       }
 
-      const matchBaseChannel = MGCC.map((channel) => {
+      const baseCh = MGCC.map((channel) => {
          if (channel.name.replace(/(\s*)/g, "") === thisBC.replace(/(\s*)/g, "")) {
             baseChannel = channel.id;
          }
       });
 
-      const matchChildChannel = MGCC.filter((channel) => {
+      const childCh = MGCC.filter((channel) => {
          for (let i = 0; i < thisCC.length; i++) {
             if (channel.name.replace(/(\s*)/g, "") === thisCC[i].replace(/(\s*)/g, "")) {
                childChannel.push(channel.id);
@@ -109,32 +108,37 @@ module.exports = {
       if (cmd === "home" || cmd === "모임" || cmd === "홈") {
          if (!this.team) {
             MCH.send(`${message.author} 팀 분배 후 실행해주세요.`);
-         } else {
-            for (i = 0; i < this.team.length; i++) {
-               for (s = 0; s < this.team[i].length; s++) {
-                  const voiceUser = MGMC.get(message.client.users.cache.get(this.team[i][s].user.id).id);
+            return;
+         }
 
-                  if (voiceUser.voice.channelID) {
-                     MGMC.get(this.team[i][s].user.id).voice.setChannel(MGCC.get(baseChannel));
-                  } else {
-                     return;
-                  }
+         for (i = 0; i < this.team.length; i++) {
+            for (s = 0; s < this.team[i].length; s++) {
+               const voiceUser = MGMC.get(message.client.users.cache.get(this.team[i][s].user.id).id);
+               if (voiceUser.voice.channelID) {
+                  MGMC.get(this.team[i][s].user.id).voice.setChannel(MGCC.get(baseChannel));
+               } else {
+                  return;
                }
             }
          }
+
          return;
       }
 
-      const channelMembers = MGCC.get(baseChannel).members.map((user) => {
+      const eventMembers = MGCC.get(baseChannel).members.sort(() => Math.random() - 0.5);
+      const eventThis = eventMembers.map((user) => {
          return user;
       });
+      const eventText = eventMembers.map((user) => {
+         return `  ${user}  `;
+      });
 
-      if (!channelMembers.length && !this.team) {
+      if (!eventThis.length && !this.team) {
          MCH.send(`${message.author} 이벤트 베이스 채널이 비어있습니다. 채널 참여 후 다시 실행해주세요.`);
          return;
       }
 
-      if (cmd === "team" || cmd === "팀" || cmd === "팀설정" || cmd === "팀나누기") {
+      if (cmd === "team" || cmd === "팀" || cmd === "팀나누기") {
          if (!args[1]) {
             this.team = undefined;
             MCH.send(`${message.author} 팀 인원이 초기화 됐습니다`);
@@ -142,12 +146,9 @@ module.exports = {
             return;
          }
 
-         const eventMembers = channelMembers.sort(() => Math.random() - 0.5);
-
-         Array.prototype.division = (n) => {
-            const arr = eventMembers.map((user) => {
-               return user;
-            });
+         division = (n, text) => {
+            let arr = "";
+            text ? (arr = eventText) : (arr = eventThis);
             const len = arr.length;
             const cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
             let temp = [];
@@ -156,13 +157,9 @@ module.exports = {
             for (let i = 0; i < cnt; i++) {
                temp.push(arr.splice(0, n));
 
-               if (i + 1 === cnt) {
-                  if (arr.length > 0 && arr.length < n) {
-                     const num = arr.length;
-
-                     for (let s = 0; s < num; s++) {
-                        temp[s].push(arr.splice(0, n));
-                     }
+               if (i + 1 === cnt && !len % cnt && n < this.maxMember) {
+                  for (let s = 0; s < len % cnt; s++) {
+                     temp[s].push(arr[arr.length - s + 1]);
                   }
                }
             }
@@ -170,63 +167,62 @@ module.exports = {
             return temp;
          };
 
-         const divisionTeams = eventMembers.division(args[1]);
-         this.team = divisionTeams;
+         const divisionTeams = division(args[1], true);
+         this.team = division(args[1], false);
          let num = 0;
 
          MCH.send(
             divisionTeams.map((name) => {
                num++;
-               this.diviTeam.push(`${num}팀: ${name}`);
-               return `${num}팀 : ${name} \n`;
+
+               return `${num}팀 : ${name}`;
             })
          );
       }
 
-      if (cmd === "이동" || cmd === "move") {
+      if (cmd === "move" || cmd === "이동") {
          if (this.num === undefined || this.team === undefined) {
             MCH.send(`${message.author} 인원에 맞게 팀을 나눠주세요.`);
+
             return;
          }
 
-         for (let i = 0; i < this.team.length; i++) {
-            for (let s = 0; s < this.team[i].length; s++) {
-               MGMC.map((user) => {
-                  if (user.user.username === this.team[i][s].user.username) {
-                     MGMC.get(user.user.id).voice.setChannel(MGCC.get(childChannel[i]));
-                  }
-               });
+         const thisTeam = this.team;
+
+         async function findTeam() {
+            for (let i = 0; i < thisTeam.length; i++) {
+               await moveChannel(thisTeam[i], childChannel[i]);
             }
          }
+
+         function moveChannel(team, child) {
+            return new Promise((resolve) => {
+               setTimeout(() => {
+                  for (let s = 0; s < team.length; s++) {
+                     const setChannelUser = MGCC.get(baseChannel).members.map((user) => {
+                        if (user.user.username === team[s].user.username) {
+                           MGMC.get(user.user.id).voice.setChannel(MGCC.get(child));
+                        }
+                     });
+                     resolve(setChannelUser);
+                  }
+               }, 1500);
+            });
+         }
+
+         // function moveChannel(team, child) {
+         //    for (const item of team) {
+         //       MGCC.get(baseChannel).members.map((user) => {
+         //          if (user.user.username === item.user.username) {
+         //             MGMC.get(user.user.id).voice.setChannel(MGCC.get(child));
+         //          }
+         //       });
+         //    }
+         // }
+
+         findTeam();
+
          return;
       }
-
-      // if (cmd === "이동" || cmd === "move") {
-      //    if (this.num === undefined || this.team === undefined) {
-      //       MCH.send(`${message.author} 인원에 맞게 팀을 나눠주세요.`);
-      //       return;
-      //    }
-
-      //    let thisTeam = this.team;
-      //    moveChannelHandler = async () => {
-      //       const moveChannel = await function () {
-      //          for (let i = 0; i < thisTeam.length; i++) {
-      //             for (let s = 0; s < thisTeam[i].length; s++) {
-      //                MGMC.map((user) => {
-      //                   if (user.user.username === thisTeam[i][s].user.username) {
-      //                      MGMC.get(user.user.id).voice.setChannel(MGCC.get(childChannel[i]));
-      //                   }
-      //                });
-      //             }
-      //          }
-      //       };
-
-      //       moveChannel();
-      //    };
-
-      //    moveChannelHandler().then(MCH.send(`${message.author} 이동이 완료됐습니다. `));
-
-      //    return;
-      // }
    },
 };
