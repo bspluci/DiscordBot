@@ -193,18 +193,18 @@ module.exports = {
 
          // let num = 0;
 
-         async function findTeam() {
-            num++;
-
-            setInterval(function(){
-               await moveChannel(thisTeam[i], childChannel[num]);
-               })
-         }
          // async function findTeam() {
-         //    for (let i = 0; i < thisTeam.length; i++) {
-         //       await moveChannel(thisTeam[i], childChannel[i]);
-         //    }
+         //    num++;
+
+         //    setInterval(function(){
+         //       await moveChannel(thisTeam[i], childChannel[num]);
+         //       })
          // }
+         async function findTeam() {
+            for (let i = 0; i < thisTeam.length; i++) {
+               await moveChannel(thisTeam[i], childChannel[i]);
+            }
+         }
 
          function moveChannel(team, child) {
             return new Promise((resolve) => {
