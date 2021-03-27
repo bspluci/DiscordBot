@@ -191,25 +191,25 @@ module.exports = {
 
          async function findTeam() {
             for (let i = 0; i < thisTeam.length; i++) {
-               await moveChannel(thisTeam[i], childChannel[i]);
+               await moveChannel(thisTeam[i]);
             }
          }
 
-         let num = 0;
+         let chnum = 0;
 
-         function moveChannel(team, child) {
+         function moveChannel(team) {
             return new Promise((resolve) => {
-               num++;
                setTimeout(() => {
                   for (let s = 0; s < team.length; s++) {
                      const setChannelUser = MGCC.get(baseChannel).members.map((user) => {
                         if (user.user.username === team[s].user.username) {
-                           MGMC.get(user.user.id).voice.setChannel(MGCC.get(child[num]));
+                           MGMC.get(user.user.id).voice.setChannel(MGCC.get(childChannel[chnum]));
                         }
                      });
                      resolve(setChannelUser);
                   }
                }, 1500);
+               chnum++;
             });
          }
 
