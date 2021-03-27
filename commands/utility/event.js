@@ -155,15 +155,13 @@ module.exports = {
             this.num = n;
 
             for (let i = 0; i < cnt; i++) {
-               if (i + 1 === cnt && len % cnt > 0 && n < this.maxMember) {
+               temp.push(arr.splice(0, n));
+
+               if (i + 1 === cnt && !len % cnt && n < this.maxMember) {
                   for (let s = 0; s < len % cnt; s++) {
                      temp[s].push(arr[arr.length - s + 1]);
                   }
-
-                  return temp;
                }
-
-               temp.push(arr.splice(0, n));
             }
 
             return temp;
@@ -191,15 +189,6 @@ module.exports = {
 
          const thisTeam = this.team;
 
-         // let num = 0;
-
-         // async function findTeam() {
-         //    num++;
-
-         //    setInterval(function(){
-         //       await moveChannel(thisTeam[i], childChannel[num]);
-         //       })
-         // }
          async function findTeam() {
             for (let i = 0; i < thisTeam.length; i++) {
                await moveChannel(thisTeam[i], childChannel[i]);
