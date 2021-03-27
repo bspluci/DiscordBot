@@ -155,13 +155,15 @@ module.exports = {
             this.num = n;
 
             for (let i = 0; i < cnt; i++) {
-               temp.push(arr.splice(0, n));
-
-               if (i + 1 === cnt && !len % cnt && n < this.maxMember) {
+               if (i + 1 === cnt && len % cnt > 0 && n < this.maxMember) {
                   for (let s = 0; s < len % cnt; s++) {
                      temp[s].push(arr[arr.length - s + 1]);
                   }
+
+                  return temp;
                }
+
+               temp.push(arr.splice(0, n));
             }
 
             return temp;
@@ -189,27 +191,33 @@ module.exports = {
 
          const thisTeam = this.team;
 
+         // let num = 0;
+
          async function findTeam() {
-            for (let i = 0; i < thisTeam.length; i++) {
-               await moveChannel(thisTeam[i]);
-            }
+            num++;
+
+            setInterval(function(){
+               await moveChannel(thisTeam[i], childChannel[num]);
+               })
          }
+         // async function findTeam() {
+         //    for (let i = 0; i < thisTeam.length; i++) {
+         //       await moveChannel(thisTeam[i], childChannel[i]);
+         //    }
+         // }
 
-         let chnum = 0;
-
-         function moveChannel(team) {
+         function moveChannel(team, child) {
             return new Promise((resolve) => {
                setTimeout(() => {
                   for (let s = 0; s < team.length; s++) {
                      const setChannelUser = MGCC.get(baseChannel).members.map((user) => {
                         if (user.user.username === team[s].user.username) {
-                           MGMC.get(user.user.id).voice.setChannel(MGCC.get(childChannel[chnum]));
+                           MGMC.get(user.user.id).voice.setChannel(MGCC.get(child));
                         }
                      });
                      resolve(setChannelUser);
                   }
                }, 1500);
-               chnum++;
             });
          }
 
