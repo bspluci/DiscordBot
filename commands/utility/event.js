@@ -175,7 +175,7 @@ module.exports = {
             divisionTeams.map((name) => {
                num++;
 
-               return `${num}팀 : ${name}`;
+               return `${num}팀 : ${name} \n`;
             })
          );
       }
