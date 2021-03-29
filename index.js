@@ -136,7 +136,6 @@ client.on("message", (message) => {
    const onMessage = async (message) => {
       try {
          const results = await googleImages.search(args[0]);
-         console.log(results);
          const reply = !results.length
             ? "검색 결과가 없습니다."
             : results[Math.floor(Math.random() * results.length)].url;
