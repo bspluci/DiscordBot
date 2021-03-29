@@ -133,22 +133,22 @@ client.on("message", (message) => {
    // 쿨다운 끝
 
    // 이미지 검색 시작
-   const onMessage = async (message) => {
-      try {
-         const results = await googleImages.search(args[0]);
-         const reply = !results.length
-            ? "검색 결과가 없습니다."
-            : results[Math.floor(Math.random() * results.length)].url;
-         message.channel.send(reply);
-      } catch (e) {
-         console.error(e);
-         message.channel.send("Error happened, see the console");
-      }
-   };
+   // const onMessage = async (message) => {
+   //    try {
+   //       const results = await googleImages.search(args[0]);
+   //       const reply = !results.length
+   //          ? "검색 결과가 없습니다."
+   //          : results[Math.floor(Math.random() * results.length)].url;
+   //       message.channel.send(reply);
+   //    } catch (e) {
+   //       console.error(e);
+   //       message.channel.send("Error happened, see the console");
+   //    }
+   // };
 
-   if (command.name === "img-search") {
-      onMessage(message);
-   }
+   // if (command.name === "img-search") {
+   //    onMessage(message);
+   // }
    // 이미지 검색 끝
 
    try {
