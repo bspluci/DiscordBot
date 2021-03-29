@@ -1,6 +1,7 @@
 const fs = require("fs");
+const GoogleImages = require("google-images");
 const Discord = require("discord.js");
-const { prefix } = require("./config.json");
+const { prefix, googleID, googleToken } = require("./config.json");
 const helpEmbed = new Discord.MessageEmbed()
    .setColor("GREEN")
    .setTitle("OUBG BOT")
@@ -42,6 +43,7 @@ client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
 const commandFolders = fs.readdirSync("./commands");
+const googleImages = new GoogleImages(googleID, googleToken);
 
 // command폴더 파일 자동 찾기
 for (const folder of commandFolders) {
@@ -128,6 +130,24 @@ client.on("message", (message) => {
    timestamps.set(message.author.id, now);
    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
    // 쿨다운 끝
+
+   // 이미지 검색 시작
+   const onMessage = async (message) => {
+      try {
+         const results = await googleImages.search(args[0]);
+         console.log(results);
+         const reply = !results.length
+            ? "검색 결과가 없습니다."
+            : results[Math.floor(Math.random() * results.length)].url;
+         message.channel.send(reply);
+      } catch (e) {
+         console.error(e);
+         message.channel.send("Error happened, see the console");
+      }
+   };
+
+   onMessage(message);
+   // 이미지 검색 끝
 
    try {
       command.execute(message, args);
