@@ -1,6 +1,7 @@
 const fs = require("fs");
 const GoogleImages = require("google-images");
 const Discord = require("discord.js");
+const Attachment = require("discord.js");
 const { prefix, googleID, googleToken } = require("./config.json");
 const helpEmbed = new Discord.MessageEmbed()
    .setColor("GREEN")
