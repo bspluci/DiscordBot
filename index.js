@@ -147,7 +147,7 @@ client.on("message", (message) => {
       }
    };
 
-   if (command.name === "이미지") {
+   if (command.name === "img-search") {
       onMessage(message);
    }
    // 이미지 검색 끝
