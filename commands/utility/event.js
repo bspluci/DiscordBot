@@ -54,7 +54,7 @@ module.exports = {
          });
 
          this.baseChannel = baseName.join("");
-         MCH.send(`${message.author} 이벤트 베이스 채널을 "${baseName.join("")}" (으)로 설정했습니다.`);
+         MCH.send(`${message.author} 이벤트 베이스 채널을 "${this.baseChannel}" (으)로 설정했습니다.`);
          return;
       }
 
@@ -65,7 +65,7 @@ module.exports = {
 
          this.childChannel = childName;
          childChannel = [];
-         MCH.send(`${message.author} 이벤트 팀 채널을 "${childName}" (으)로 설정했습니다.`);
+         MCH.send(`${message.author} 이벤트 팀 채널을 "${this.childChannel}" (으)로 설정했습니다.`);
          return;
       }
 
@@ -81,6 +81,7 @@ module.exports = {
                MCH.send(
                   `${message.author} ${thisCC[i]} 은 중복된 채널입니다. \n${prefix}${this.name} showchannels 명령으로 채널 목록을 확인해주세요.`
                );
+
                return;
             }
          }
@@ -152,16 +153,22 @@ module.exports = {
             const len = arr.length;
             const cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
             let temp = [];
+
             this.num = n;
 
             for (let i = 0; i < cnt; i++) {
                temp.push(arr.splice(0, n));
+            }
 
-               if (i + 1 === cnt && !len % cnt && n < this.maxMember) {
-                  for (let s = 0; s < len % cnt; s++) {
-                     temp[s].push(arr[arr.length - s + 1]);
-                  }
+            if (len % cnt > 0 && n < this.maxMember && temp.length > 2) {
+               const tempLastLen = temp[temp.length - 1];
+
+               for (let s = 0; s < tempLastLen.length; s++) {
+                  temp[s].push(tempLastLen[s]);
+                  tempLastLen.splice(temp[temp.length - 1], 1);
                }
+
+               return temp;
             }
 
             return temp;
@@ -174,8 +181,8 @@ module.exports = {
          MCH.send(
             divisionTeams.map((name) => {
                num++;
-
-               return `${num}팀 : ${name} \n`;
+               if (name.length === 0) return;
+               return `${num}팀 : ${name}`;
             })
          );
       }
@@ -189,36 +196,29 @@ module.exports = {
 
          const thisTeam = this.team;
 
-         async function findTeam() {
+         const findTeam = async () => {
+            await myTeam();
+         };
+
+         const myTeam = async () => {
             for (let i = 0; i < thisTeam.length; i++) {
                await moveChannel(thisTeam[i], childChannel[i]);
             }
-         }
+         };
 
-         function moveChannel(team, child) {
+         const moveChannel = (team, child) => {
             return new Promise((resolve) => {
                setTimeout(() => {
-                  for (let s = 0; s < team.length; s++) {
-                     const setChannelUser = MGCC.get(baseChannel).members.map((user) => {
-                        if (user.user.username === team[s].user.username) {
-                           MGMC.get(user.user.id).voice.setChannel(MGCC.get(child));
-                        }
-                     });
-                     resolve(setChannelUser);
-                  }
+                  const setChannelUser = () => {
+                     for (let s = 0; s < team.length; s++) {
+                        MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
+                     }
+                  };
+
+                  resolve(setChannelUser());
                }, 1500);
             });
-         }
-
-         // function moveChannel(team, child) {
-         //    for (const item of team) {
-         //       MGCC.get(baseChannel).members.map((user) => {
-         //          if (user.user.username === item.user.username) {
-         //             MGMC.get(user.user.id).voice.setChannel(MGCC.get(child));
-         //          }
-         //       });
-         //    }
-         // }
+         };
 
          findTeam();
 
