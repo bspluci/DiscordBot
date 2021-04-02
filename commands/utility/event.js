@@ -241,16 +241,16 @@ module.exports = {
 
          const myTeam = async () => {
             for (let i = 0; i < thisTeam.length; i++) {
-               await moveChannel(thisTeam[i], childChannel[i]);
+               await moveChannel(thisTeam[i]);
             }
          };
 
-         const moveChannel = (team, child) => {
+         const moveChannel = (team) => {
             return new Promise((resolve) => {
                setTimeout(() => {
                   const setChannelUser = () => {
                      for (let s = 0; s < team.length; s++) {
-                        MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
+                        MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(childChannel[s]));
                      }
                   };
 
