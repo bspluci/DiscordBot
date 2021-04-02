@@ -1,3 +1,4 @@
+const Discord = require("discord.js");
 const { prefix } = require("../../config.json");
 
 module.exports = {
@@ -37,6 +38,44 @@ module.exports = {
       const thisCC = this.childChannel;
       let baseChannel = ""; // 채널명을 채널id값으로 바꿈
       let childChannel = []; // 채널명을 채널id값으로 바꿈
+
+      const helpEmbed = new Discord.MessageEmbed()
+         .setColor("GREEN")
+         .setTitle("CUSTOM EVENT COMMANDS")
+         .setThumbnail("https://i.imgur.com/wSTFkRM.png")
+         .addFields(
+            {
+               name: "showchannels / 채널목록 / 채널보기",
+               value: "등록된 채널목록을 보여줍니다. \n 예) !event showchannels",
+            },
+            {
+               name: "base / 대기실 / 베이스",
+               value: "베이스 채널을 설정합니다(공백불가, 중복불가) \n 예) !event base 채널이름",
+            },
+            {
+               name: "child / 팀채널 / 팀설정",
+               value: "팀채널을 설정합니다(공백불가) \n 예) !event child 채널이름0 채널이름1 채널이름2",
+            },
+            {
+               name: "team / 팀 / 팀나누기",
+               value: "베이스 채널의 인원을 두번째 인수값으로 나누어 팀을 분배합니다. \n 예) !event team 3",
+            },
+            {
+               name: "move / 이동",
+               value: "나누어진 팀원을 채널에 맞게 이동시킵니다. \n 예) !event move",
+            },
+            {
+               name: "home / 모임 / 홈",
+               value: "팀채널에 이동시킨 인원을 베이스채널로 이동시킵니다. \n 예) !event home",
+            }
+         )
+         .setTimestamp();
+
+      // 이벤트 사용설명서 임베드 출력
+      if (args[0] === "help") {
+         message.channel.send(helpEmbed);
+         return;
+      }
 
       if (cmd === "showchannels" || cmd === "채널목록" || cmd === "채널보기") {
          MCH.send(`baseChannel: ${thisBC} \nchildChannel: ${thisCC}`);

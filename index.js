@@ -1,50 +1,12 @@
 const fs = require("fs");
-const GoogleImages = require("google-images");
 const Discord = require("discord.js");
-const Attachment = require("discord.js");
-const { prefix, googleID, googleToken } = require("./config.json");
-const helpEmbed = new Discord.MessageEmbed()
-   .setColor("GREEN")
-   .setTitle("OUBG BOT")
-   // .setURL("https://discord.js.org/")
-   // .setAuthor("Some name", "https://i.imgur.com/wSTFkRM.png", "https://discord.js.org")
-   // .setDescription("Some description here")
-   .setThumbnail("https://i.imgur.com/wSTFkRM.png")
-   .addFields(
-      { name: "showchannels / 채널목록 / 채널보기", value: "등록된 채널목록을 보여줍니다. \n 예) !event showchannels" },
-      {
-         name: "base / 대기실 / 베이스",
-         value: "베이스 채널을 설정합니다(공백불가, 중복불가) \n 예) !event base 채널이름",
-      },
-      {
-         name: "child / 팀채널 / 팀설정",
-         value: "팀채널을 설정합니다(공백불가) \n 예) !event child 채널이름0 채널이름1 채널이름2",
-      },
-      {
-         name: "team / 팀 / 팀나누기",
-         value: "베이스 채널의 인원을 두번째 인수값으로 나누어 팀을 분배합니다. \n 예) !event team 3",
-      },
-      {
-         name: "move / 이동",
-         value: "나누어진 팀원을 채널에 맞게 이동시킵니다. \n 예) !event move",
-      },
-      {
-         name: "home / 모임 / 홈",
-         value: "팀채널에 이동시킨 인원을 베이스채널로 이동시킵니다. \n 예) !event home",
-      }
-      // { name: "\u200B", value: "\u200B" },
-   )
-   // .addField("Inline field title", "Some value here", true)
-   // .setImage("https://i.imgur.com/wSTFkRM.png")
-   .setTimestamp();
-// .setFooter("Some footer text here", "https://i.imgur.com/wSTFkRM.png");
+const { prefix } = require("./config.json");
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
 const commandFolders = fs.readdirSync("./commands");
-const googleImages = new GoogleImages(googleID, googleToken);
 
 // command폴더 파일 자동 찾기
 for (const folder of commandFolders) {
@@ -77,7 +39,7 @@ client.on("message", (message) => {
       return message.reply("I can't execute that command inside DMs!");
    }
 
-   // 명령 권한 체크(kick.js)
+   // 명령 권한 체크
    if (command.permissions) {
       const authorPerms = message.channel.permissionsFor(message.author);
       if (!authorPerms || !authorPerms.has(command.permissions)) {
@@ -131,25 +93,6 @@ client.on("message", (message) => {
    timestamps.set(message.author.id, now);
    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
    // 쿨다운 끝
-
-   // 이미지 검색 시작
-   // const onMessage = async (message) => {
-   //    try {
-   //       const results = await googleImages.search(args[0]);
-   //       const reply = !results.length
-   //          ? "검색 결과가 없습니다."
-   //          : results[Math.floor(Math.random() * results.length)].url;
-   //       message.channel.send(reply);
-   //    } catch (e) {
-   //       console.error(e);
-   //       message.channel.send("Error happened, see the console");
-   //    }
-   // };
-
-   // if (command.name === "img-search") {
-   //    onMessage(message);
-   // }
-   // 이미지 검색 끝
 
    try {
       command.execute(message, args);
