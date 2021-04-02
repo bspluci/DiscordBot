@@ -241,22 +241,24 @@ module.exports = {
 
          const myTeam = async () => {
             for (let i = 0; i < thisTeam.length; i++) {
-               await moveChannel(thisTeam[i]);
+               await moveChannel(thisTeam[i], childChannel[i]);
             }
          };
 
-         const moveChannel = (team) => {
-            return new Promise((resolve) => {
-               setTimeout(() => {
-                  const setChannelUser = () => {
-                     for (let s = 0; s < team.length; s++) {
-                        MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(childChannel[s]));
-                     }
-                  };
+         const moveChannel = (team, child) => {
+            MCH.send(team);
+            MCH.send(child);
+            // return new Promise((resolve) => {
+            //    setTimeout(() => {
+            //       const setChannelUser = () => {
+            //          for (let s = 0; s < team.length; s++) {
+            //             MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
+            //          }
+            //       };
 
-                  resolve(setChannelUser());
-               }, 1500);
-            });
+            //       resolve(setChannelUser());
+            //    }, 1500);
+            // });
          };
 
          findTeam();
