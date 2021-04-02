@@ -248,13 +248,13 @@ module.exports = {
          const moveChannel = (team, child) => {
             return new Promise((resolve) => {
                setTimeout(() => {
-                  MCH.send(team);
-                  MCH.send(child);
-                  // const setChannelUser = () => {
-                  //    for (let s = 0; s < team.length; s++) {
-                  //       MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
-                  //    }
-                  // };
+                  const setChannelUser = () => {
+                     MCH.send(team);
+                     MCH.send(child);
+                     //    for (let s = 0; s < team.length; s++) {
+                     //       MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
+                     //    }
+                  };
 
                   resolve(setChannelUser());
                }, 1500);
