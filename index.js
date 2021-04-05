@@ -42,13 +42,10 @@ client.on("message", (message) => {
    // 명령 권한 체크
    if (command.permissions) {
       const authorPerms = message.channel.permissionsFor(message.author);
+
       if (!authorPerms || !authorPerms.has(command.permissions)) {
          return message.reply("You can not do this!");
       }
-   }
-
-   if (command.name === "event" && args[0] === `${command.help}`) {
-      message.channel.send(helpEmbed);
    }
 
    // 명령 사용법 체크

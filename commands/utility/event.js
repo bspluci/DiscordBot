@@ -3,6 +3,7 @@ const { prefix } = require("../../config.json");
 
 module.exports = {
    name: "event",
+   // permissions: "MANAGE_ROLES",
    description: "이벤트 매치를 생성합니다.",
    aliases: ["이벤트", "ev"],
    args: true,
@@ -186,6 +187,8 @@ module.exports = {
             return;
          }
 
+         console.log(childChannel);
+
          division = (n, text) => {
             let arr = "";
             text ? (arr = eventText) : (arr = eventThis);
@@ -241,6 +244,7 @@ module.exports = {
 
          const myTeam = async () => {
             for (let i = 0; i < thisTeam.length; i++) {
+               console.log(childChannel[i]);
                await moveChannel(thisTeam[i], childChannel[i]);
             }
          };
@@ -249,11 +253,9 @@ module.exports = {
             return new Promise((resolve) => {
                setTimeout(() => {
                   const setChannelUser = () => {
-                     MCH.send(team);
-                     MCH.send(child);
-                     //    for (let s = 0; s < team.length; s++) {
-                     //       MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
-                     //    }
+                     for (let s = 0; s < team.length; s++) {
+                        MGMC.get(team[s].user.id).voice.setChannel(MGCC.get(child));
+                     }
                   };
 
                   resolve(setChannelUser());
